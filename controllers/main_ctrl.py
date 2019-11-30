@@ -7,12 +7,20 @@ class MainController(QObject):
 
         self._model = model
 
-    @pyqtSlot(int)
-    def change_amount(self, value):
-        self._model.amount = value
+    def clear_console_window(self):
+        if self._model.debug_mode:
+            print("Clear Window Button pressed.")
+        # TODO: clear console window
 
-        # calculate even or odd
-        self._model.even_odd = 'odd' if value % 2 else 'even'
+    def set_debug_mode(self, value):
+        print("Setting Debug Mode to " + str(value))
+        self._model.debug_mode = value
+    # @pyqtSlot(int)
+    # def change_amount(self, value):
+    #     self._model.amount = value
 
-        # calculate button enabled state
-        self._model.enable_reset = True if value else False
+    #     # calculate even or odd
+    #     self._model.even_odd = 'odd' if value % 2 else 'even'
+
+    #     # calculate button enabled state
+    #     self._model.enable_reset = True if value else False

@@ -1,0 +1,5 @@
+<RCC>
+  <qresource prefix="ui">
+    <file>img/datensatz1_3d.png</file>
+  </qresource>
+</RCC>

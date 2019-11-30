@@ -3,6 +3,7 @@ from PyQt5.QtCore import QObject, pyqtSignal
 
 class Model(QObject):
     amount_changed = pyqtSignal(int)
+    debug_mode_changed = pyqtSignal(bool)
     even_odd_changed = pyqtSignal(str)
     enable_reset_changed = pyqtSignal(bool)
 
@@ -14,6 +15,15 @@ class Model(QObject):
     def amount(self, value):
         self._amount = value
         self.amount_changed.emit(value)
+
+    @property
+    def debug_mode(self):
+        return self._debug_mode
+
+    @debug_mode.setter
+    def debug_mode(self, value):
+        self._debug_mode = value
+        self.debug_mode_changed.emit(value)
 
     @property
     def even_odd(self):
@@ -39,3 +49,4 @@ class Model(QObject):
         self._amount = 0
         self._even_odd = ''
         self._enable_reset = False
+        self._debug_mode = True

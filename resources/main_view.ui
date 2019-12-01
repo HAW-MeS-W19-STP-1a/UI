@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1271</width>
-    <height>844</height>
+    <width>1353</width>
+    <height>995</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -46,7 +46,7 @@
            <item>
             <widget class="QWidget" name="verticalWidget_start" native="true">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -76,17 +76,23 @@
               </item>
               <item>
                <widget class="QDateTimeEdit" name="dateTimeEdit_start">
+                <property name="enabled">
+                 <bool>true</bool>
+                </property>
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>115</width>
+                  <width>125</width>
                   <height>0</height>
                  </size>
+                </property>
+                <property name="readOnly">
+                 <bool>false</bool>
                 </property>
                 <property name="date">
                  <date>
@@ -94,6 +100,9 @@
                   <month>1</month>
                   <day>1</day>
                  </date>
+                </property>
+                <property name="displayFormat">
+                 <string>dd.MM.yyyy HH:mm:ss</string>
                 </property>
                </widget>
               </item>
@@ -177,6 +186,32 @@
             </spacer>
            </item>
            <item>
+            <widget class="QPushButton" name="pushButton_update">
+             <property name="sizePolicy">
+              <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+               <horstretch>0</horstretch>
+               <verstretch>0</verstretch>
+              </sizepolicy>
+             </property>
+             <property name="text">
+              <string>Update</string>
+             </property>
+            </widget>
+           </item>
+           <item>
+            <spacer name="horizontalSpacer_4">
+             <property name="orientation">
+              <enum>Qt::Horizontal</enum>
+             </property>
+             <property name="sizeHint" stdset="0">
+              <size>
+               <width>40</width>
+               <height>20</height>
+              </size>
+             </property>
+            </spacer>
+           </item>
+           <item>
             <widget class="QWidget" name="verticalWidget_Data2" native="true">
              <property name="sizePolicy">
               <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
@@ -239,7 +274,7 @@
            <item>
             <widget class="QWidget" name="verticalWidget_stop" native="true">
              <property name="sizePolicy">
-              <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+              <sizepolicy hsizetype="Preferred" vsizetype="Maximum">
                <horstretch>0</horstretch>
                <verstretch>0</verstretch>
               </sizepolicy>
@@ -270,14 +305,14 @@
               <item>
                <widget class="QDateTimeEdit" name="dateTimeEdit_stop">
                 <property name="sizePolicy">
-                 <sizepolicy hsizetype="Maximum" vsizetype="Fixed">
+                 <sizepolicy hsizetype="Preferred" vsizetype="Fixed">
                   <horstretch>0</horstretch>
                   <verstretch>0</verstretch>
                  </sizepolicy>
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>115</width>
+                  <width>125</width>
                   <height>0</height>
                  </size>
                 </property>
@@ -288,6 +323,9 @@
                   <day>1</day>
                  </date>
                 </property>
+                <property name="displayFormat">
+                 <string>dd.MM.yyyy HH:mm:ss</string>
+                </property>
                </widget>
               </item>
              </layout>
@@ -297,13 +335,32 @@
          </widget>
         </item>
         <item>
-         <widget class="MplWidget" name="MplWidget" native="true">
-          <property name="sizePolicy">
-           <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-            <horstretch>0</horstretch>
-            <verstretch>0</verstretch>
-           </sizepolicy>
+         <widget class="QTabWidget" name="tabWidget">
+          <property name="currentIndex">
+           <number>0</number>
           </property>
+          <widget class="QWidget" name="tab_graph">
+           <attribute name="title">
+            <string>Graph</string>
+           </attribute>
+           <layout class="QGridLayout" name="gridLayout_2">
+            <item row="0" column="0">
+             <widget class="MplWidget" name="MplWidget" native="true">
+              <property name="sizePolicy">
+               <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
+                <horstretch>0</horstretch>
+                <verstretch>0</verstretch>
+               </sizepolicy>
+              </property>
+             </widget>
+            </item>
+           </layout>
+          </widget>
+          <widget class="QWidget" name="tab_overview">
+           <attribute name="title">
+            <string>Overview</string>
+           </attribute>
+          </widget>
          </widget>
         </item>
        </layout>
@@ -344,7 +401,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1271</width>
+     <width>1353</width>
      <height>21</height>
     </rect>
    </property>
@@ -381,9 +438,10 @@
       <string>Set Update Interval</string>
      </property>
      <addaction name="action_set_update_interval_5_sec"/>
-     <addaction name="action_set_update_interval_15_sec"/>
+     <addaction name="action_set_update_interval_1_min"/>
      <addaction name="action_set_update_interval_15_min"/>
      <addaction name="action_set_update_interval_1_h"/>
+     <addaction name="action_set_update_interval_manuel"/>
     </widget>
     <widget class="QMenu" name="menuSet_Messearing_Intervall">
      <property name="toolTip">
@@ -407,12 +465,12 @@
     <property name="title">
      <string>View</string>
     </property>
-    <addaction name="action_set_view_last_1_minute"/>
-    <addaction name="action_set_view_last_15_minute"/>
-    <addaction name="action_set_view_last_1_h"/>
-    <addaction name="action_set_view_last_1_d"/>
-    <addaction name="action_set_view_last_1_w"/>
-    <addaction name="action_set_view_last_1_m"/>
+    <addaction name="action_set_view_1_minute"/>
+    <addaction name="action_set_view_15_minute"/>
+    <addaction name="action_set_view_1_h"/>
+    <addaction name="action_set_view_1_d"/>
+    <addaction name="action_set_view_1_w"/>
+    <addaction name="action_set_view_1_m"/>
     <addaction name="action_set_view_custom"/>
    </widget>
    <widget class="QMenu" name="menuMode">
@@ -471,7 +529,7 @@
     <string>5 sec</string>
    </property>
   </action>
-  <action name="action_set_update_interval_15_sec">
+  <action name="action_set_update_interval_1_min">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -527,7 +585,7 @@
     <string>1 min</string>
    </property>
   </action>
-  <action name="action_set_view_last_1_minute">
+  <action name="action_set_view_1_minute">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -535,7 +593,7 @@
     <string>Last Minute</string>
    </property>
   </action>
-  <action name="action_set_view_last_15_minute">
+  <action name="action_set_view_15_minute">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -543,7 +601,7 @@
     <string>Last 15 Minutes</string>
    </property>
   </action>
-  <action name="action_set_view_last_1_h">
+  <action name="action_set_view_1_h">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -551,7 +609,7 @@
     <string>Last Hour</string>
    </property>
   </action>
-  <action name="action_set_view_last_1_d">
+  <action name="action_set_view_1_d">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -559,7 +617,7 @@
     <string>Last Day</string>
    </property>
   </action>
-  <action name="action_set_view_last_1_w">
+  <action name="action_set_view_1_w">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -567,7 +625,7 @@
     <string>Last Week</string>
    </property>
   </action>
-  <action name="action_set_view_last_1_m">
+  <action name="action_set_view_1_m">
    <property name="checkable">
     <bool>true</bool>
    </property>
@@ -597,6 +655,14 @@
    </property>
    <property name="text">
     <string>Disable Debug</string>
+   </property>
+  </action>
+  <action name="action_set_update_interval_manuel">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Manuel</string>
    </property>
   </action>
  </widget>

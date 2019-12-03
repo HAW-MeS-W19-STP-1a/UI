@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1353</width>
-    <height>995</height>
+    <width>855</width>
+    <height>717</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -379,7 +379,11 @@
         <item>
          <layout class="QHBoxLayout" name="layout_send_command">
           <item>
-           <widget class="QLineEdit" name="line_send_command"/>
+           <widget class="QLineEdit" name="line_send_command">
+            <property name="text">
+             <string/>
+            </property>
+           </widget>
           </item>
           <item>
            <widget class="QPushButton" name="pushButton_clear_window">
@@ -401,7 +405,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>1353</width>
+     <width>855</width>
      <height>21</height>
     </rect>
    </property>
@@ -479,6 +483,8 @@
     </property>
     <addaction name="action_enable_debug"/>
     <addaction name="action_disable_debug"/>
+    <addaction name="action_enable_com"/>
+    <addaction name="action_disable_com"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menucontrol"/>
@@ -663,6 +669,22 @@
    </property>
    <property name="text">
     <string>Manuel</string>
+   </property>
+  </action>
+  <action name="action_enable_com">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Enable Com</string>
+   </property>
+  </action>
+  <action name="action_disable_com">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Disable Com</string>
    </property>
   </action>
  </widget>

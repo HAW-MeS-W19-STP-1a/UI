@@ -3,6 +3,8 @@ from PyQt5.QtCore import QObject, pyqtSignal, QDateTime
 
 class Model(QObject):
     amount_changed = pyqtSignal(int)
+    console_buffer_changed = pyqtSignal(str)
+    com_mode_changed = pyqtSignal(bool)
     debug_mode_changed = pyqtSignal(bool)
     even_odd_changed = pyqtSignal(str)
     enable_reset_changed = pyqtSignal(bool)
@@ -19,6 +21,24 @@ class Model(QObject):
     def amount(self, value):
         self._amount = value
         self.amount_changed.emit(value)
+
+    @property
+    def console_buffer(self):
+        return self._console_buffer
+
+    @console_buffer.setter
+    def console_buffer(self, value):
+        self._console_buffer = value
+        self.console_buffer_changed.emit(value)
+
+    @property
+    def com_mode(self):
+        return self._com_mode
+
+    @com_mode.setter
+    def com_mode(self, value):
+        self._com_mode = value
+        self.com_mode_changed.emit(value)
 
     @property
     def debug_mode(self):
@@ -94,3 +114,5 @@ class Model(QObject):
         self._view_dateTime_stop = QDateTime.currentDateTimeUtc()
         self._view_time_int = "1h"
         self._update_int = 5000
+        self._console_buffer = ""
+        self._com_mode = False

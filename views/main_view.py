@@ -23,6 +23,10 @@ class MainView(QMainWindow):
             lambda: self._main_controller.set_debug_mode(True))
         self._ui.action_disable_debug.triggered.connect(
             lambda: self._main_controller.set_debug_mode(False))
+        self._ui.action_enable_com.triggered.connect(
+            lambda: self._main_controller.set_com_mode(True))
+        self._ui.action_disable_com.triggered.connect(
+            lambda: self._main_controller.set_com_mode(False))
 
         self._ui.action_set_update_interval_5_sec.triggered.connect(
             lambda: self._main_controller.set_update_int((5*1000)))
@@ -50,7 +54,16 @@ class MainView(QMainWindow):
         self._ui.action_set_view_1_m.triggered.connect(
             lambda: self._main_controller.set_view_time_int("1m"))
 
+        # Console Window
+        self._ui.line_send_command.returnPressed.connect(
+            lambda: self.on_send_command_returnPressed(
+                self._ui.line_send_command.text()
+            )
+        )
+
         # listen for model event signals
+        self._model.com_mode_changed.connect(
+            self.on_com_mode_changed)
         self._model.debug_mode_changed.connect(
             self.on_debug_mode_changed)
         self._model.update_int_changed.connect(
@@ -61,11 +74,19 @@ class MainView(QMainWindow):
             self.on_view_dateTime_start_changed)
         self._model.view_dateTime_stop_changed.connect(
             self.on_view_dateTime_stop_changed)
+        self._model.console_buffer_changed.connect(
+            self.on_command_buffer_changed)
 
         # set a default value
         self._main_controller.set_debug_mode(True)
+        self._main_controller.set_com_mode(False)
         self._main_controller.set_view_time_int("1h")
-        self._main_controller.set_update_int(5000)
+        self._main_controller.set_update_int(60000)
+
+    @pyqtSlot(bool)
+    def on_com_mode_changed(self, value):
+        self._ui.action_enable_com.setChecked(value)
+        self._ui.action_disable_com.setChecked(not value)
 
     @pyqtSlot(bool)
     def on_debug_mode_changed(self, value):
@@ -111,3 +132,11 @@ class MainView(QMainWindow):
     def on_view_dateTime_stop_changed(self, value):
         if self._model.view_time_int != "custom":
             self._ui.dateTimeEdit_stop.setDateTime(value)
+
+    @pyqtSlot(str)
+    def on_command_buffer_changed(self, value):
+        self._ui.textBrowser_Console.setText(value)
+
+    def on_send_command_returnPressed(self, value):
+        self._main_controller.send_command(value)
+        self._ui.line_send_command.clear()

@@ -345,14 +345,7 @@
            </attribute>
            <layout class="QGridLayout" name="gridLayout_2">
             <item row="0" column="0">
-             <widget class="MplWidget" name="MplWidget" native="true">
-              <property name="sizePolicy">
-               <sizepolicy hsizetype="MinimumExpanding" vsizetype="MinimumExpanding">
-                <horstretch>0</horstretch>
-                <verstretch>0</verstretch>
-               </sizepolicy>
-              </property>
-             </widget>
+             <widget class="PlotWidget" name="graphicsView"/>
             </item>
            </layout>
           </widget>
@@ -690,10 +683,9 @@
  </widget>
  <customwidgets>
   <customwidget>
-   <class>MplWidget</class>
-   <extends>QWidget</extends>
-   <header>mywidgets.mplwidget.h</header>
-   <container>1</container>
+   <class>PlotWidget</class>
+   <extends>QGraphicsView</extends>
+   <header location="global">pyqtgraph</header>
   </customwidget>
  </customwidgets>
  <resources>

@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file './resources/main_view.ui'
@@ -177,14 +178,9 @@ class Ui_MainWindow(object):
         self.tab_graph.setObjectName("tab_graph")
         self.gridLayout_2 = QtWidgets.QGridLayout(self.tab_graph)
         self.gridLayout_2.setObjectName("gridLayout_2")
-        self.MplWidget = MplWidget(self.tab_graph)
-        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.MinimumExpanding)
-        sizePolicy.setHorizontalStretch(0)
-        sizePolicy.setVerticalStretch(0)
-        sizePolicy.setHeightForWidth(self.MplWidget.sizePolicy().hasHeightForWidth())
-        self.MplWidget.setSizePolicy(sizePolicy)
-        self.MplWidget.setObjectName("MplWidget")
-        self.gridLayout_2.addWidget(self.MplWidget, 0, 0, 1, 1)
+        self.graphicsView = PlotWidget(self.tab_graph)
+        self.graphicsView.setObjectName("graphicsView")
+        self.gridLayout_2.addWidget(self.graphicsView, 0, 0, 1, 1)
         self.tabWidget.addTab(self.tab_graph, "")
         self.tab_overview = QtWidgets.QWidget()
         self.tab_overview.setObjectName("tab_overview")
@@ -408,5 +404,5 @@ class Ui_MainWindow(object):
         self.action_set_update_interval_manuel.setText(_translate("MainWindow", "Manuel"))
         self.action_enable_com.setText(_translate("MainWindow", "Enable Com"))
         self.action_disable_com.setText(_translate("MainWindow", "Disable Com"))
-from mywidgets.mplwidget import MplWidget
+from pyqtgraph import PlotWidget
 import mvc_app_rc

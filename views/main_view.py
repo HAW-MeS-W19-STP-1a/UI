@@ -1,7 +1,8 @@
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtCore import pyqtSlot, QDateTime
 from views.main_view_ui import Ui_MainWindow
-
+import numpy as np
+import pyqtgraph as pg
 
 class MainView(QMainWindow):
     def __init__(self, model, main_controller):
@@ -82,18 +83,10 @@ class MainView(QMainWindow):
         self._main_controller.set_com_mode(False)
         self._main_controller.set_view_time_int("1h")
         self._main_controller.set_update_int(60000)
-        self.color = "tab:red"
-        self._ui.MplWidget.canvas.ax.set_xlabel("DateTime")
-        self._ui.MplWidget.canvas.ax.set_ylabel("sin", color=self.color)
-        self._ui.MplWidget.canvas.ax.plot(self._model.x, self._model.sin, color=self.color)
-        self._ui.MplWidget.canvas.ax.tick_params(axis="y", labelcolor=self.color)
-        self.ax2 = self._ui.MplWidget.canvas.ax.twinx()
-        self.color = "tab:blue"
-        self.ax2.set_ylabel("cos", color=self.color)
-        self.ax2.plot(self._model.x, self._model.cos, color=self.color)
-        self.ax2.tick_params(axis="y", labelcolor=self.color)
-        self._ui.MplWidget.canvas.draw()
 
+        # pyqtgraph demo
+        self.pyqtgraphdemo()
+        
     @pyqtSlot(bool)
     def on_com_mode_changed(self, value):
         self._ui.action_enable_com.setChecked(value)
@@ -151,3 +144,9 @@ class MainView(QMainWindow):
     def on_send_command_returnPressed(self, value):
         self._main_controller.send_command(value)
         self._ui.line_send_command.clear()
+
+    def pyqtgraphdemo(self):
+        pw = self._ui.graphicsView
+        p1 = pw.plot()
+        p1.setPen((200,200,100))
+        p1.setData(y=self._model.sin, x=self._model.x)

@@ -1,5 +1,6 @@
 from PyQt5.QtCore import QObject, pyqtSignal, QDateTime
-
+import pandas as pd
+import numpy as np
 
 class Model(QObject):
     amount_changed = pyqtSignal(int)
@@ -116,3 +117,7 @@ class Model(QObject):
         self._update_int = 5000
         self._console_buffer = ""
         self._com_mode = False
+        self._data = pd.DataFrame(columns=["Sinus", "Cosinus"])
+        self.x = np.linspace(-np.pi, np.pi, 201)
+        self.sin = np.sin(self.x)
+        self.cos = 5*np.cos(self.x)

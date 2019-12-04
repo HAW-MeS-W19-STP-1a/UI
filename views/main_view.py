@@ -82,6 +82,17 @@ class MainView(QMainWindow):
         self._main_controller.set_com_mode(False)
         self._main_controller.set_view_time_int("1h")
         self._main_controller.set_update_int(60000)
+        self.color = "tab:red"
+        self._ui.MplWidget.canvas.ax.set_xlabel("DateTime")
+        self._ui.MplWidget.canvas.ax.set_ylabel("sin", color=self.color)
+        self._ui.MplWidget.canvas.ax.plot(self._model.x, self._model.sin, color=self.color)
+        self._ui.MplWidget.canvas.ax.tick_params(axis="y", labelcolor=self.color)
+        self.ax2 = self._ui.MplWidget.canvas.ax.twinx()
+        self.color = "tab:blue"
+        self.ax2.set_ylabel("cos", color=self.color)
+        self.ax2.plot(self._model.x, self._model.cos, color=self.color)
+        self.ax2.tick_params(axis="y", labelcolor=self.color)
+        self._ui.MplWidget.canvas.draw()
 
     @pyqtSlot(bool)
     def on_com_mode_changed(self, value):

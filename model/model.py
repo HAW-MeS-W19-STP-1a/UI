@@ -1,11 +1,14 @@
 from PyQt5.QtCore import QObject, pyqtSignal, QDateTime
 import pandas as pd
 import numpy as np
+import serial
+
 
 class Model(QObject):
     amount_changed = pyqtSignal(int)
     console_buffer_changed = pyqtSignal(str)
     com_mode_changed = pyqtSignal(bool)
+    data_changed = pyqtSignal(pd.DataFrame)
     debug_mode_changed = pyqtSignal(bool)
     even_odd_changed = pyqtSignal(str)
     enable_reset_changed = pyqtSignal(bool)
@@ -104,6 +107,23 @@ class Model(QObject):
         self._view_time_int = value
         self.view_time_int_changed.emit(value)
 
+    @property
+    def ser(self):
+        return self._ser
+
+    @ser.setter
+    def ser(self, value):
+        self._ser = value
+
+    @property
+    def data(self):
+        return self._data
+
+    @data.setter
+    def data(self, value):
+        self._data = value
+        self.data_changed.emit(value)
+
     def __init__(self):
         super().__init__()
 
@@ -117,7 +137,11 @@ class Model(QObject):
         self._update_int = 5000
         self._console_buffer = ""
         self._com_mode = False
-        self._data = pd.DataFrame(columns=["Sinus", "Cosinus"])
-        self.x = np.linspace(-np.pi, np.pi, 201)
-        self.sin = np.sin(self.x)
-        self.cos = 5*np.cos(self.x)
+        self._data = pd.DataFrame(columns=[
+            "DateTime", "t_bme", "t_cpu", "t_qmc", "t_mpu", "w_dir", "w_spd",
+            "pres", "hum", "zen", "azm", "lat", "lon", "alt", "v_bat", "i_bat",
+            "v_solar", "i_solar", "v_5v"
+        ])
+        self._ser = None
+        self.x = [1, 2, 3, 4]
+        self.sin = [1, 2, 3, 4]

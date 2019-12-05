@@ -2,7 +2,9 @@ from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtCore import pyqtSlot, QDateTime
 from views.main_view_ui import Ui_MainWindow
 import numpy as np
+import pandas as pd
 import pyqtgraph as pg
+
 
 class MainView(QMainWindow):
     def __init__(self, model, main_controller):
@@ -18,7 +20,7 @@ class MainView(QMainWindow):
         self._ui.pushButton_clear_window.clicked.connect(
             self._main_controller.clear_console_window)
         self._ui.pushButton_update.clicked.connect(
-            self._main_controller.update_view_dateTime)
+            self._main_controller.on_update_timer_expired)
         # menu actions
         self._ui.action_enable_debug.triggered.connect(
             lambda: self._main_controller.set_debug_mode(True))
@@ -30,13 +32,13 @@ class MainView(QMainWindow):
             lambda: self._main_controller.set_com_mode(False))
 
         self._ui.action_set_update_interval_5_sec.triggered.connect(
-            lambda: self._main_controller.set_update_int((5*1000)))
+            lambda: self._main_controller.set_update_int((5 * 1000)))
         self._ui.action_set_update_interval_1_min.triggered.connect(
-            lambda: self._main_controller.set_update_int((60*1000)))
+            lambda: self._main_controller.set_update_int((60 * 1000)))
         self._ui.action_set_update_interval_15_min.triggered.connect(
-            lambda: self._main_controller.set_update_int((15*60*1000)))
+            lambda: self._main_controller.set_update_int((15 * 60 * 1000)))
         self._ui.action_set_update_interval_1_h.triggered.connect(
-            lambda: self._main_controller.set_update_int((60*60*1000)))
+            lambda: self._main_controller.set_update_int((60 * 60 * 1000)))
         self._ui.action_set_update_interval_manuel.triggered.connect(
             lambda: self._main_controller.set_update_int(-1))
 
@@ -58,17 +60,13 @@ class MainView(QMainWindow):
         # Console Window
         self._ui.line_send_command.returnPressed.connect(
             lambda: self.on_send_command_returnPressed(
-                self._ui.line_send_command.text()
-            )
-        )
+                self._ui.line_send_command.text()))
 
         # listen for model event signals
-        self._model.com_mode_changed.connect(
-            self.on_com_mode_changed)
-        self._model.debug_mode_changed.connect(
-            self.on_debug_mode_changed)
-        self._model.update_int_changed.connect(
-            self.on_update_int_changed)
+        self._model.com_mode_changed.connect(self.on_com_mode_changed)
+        self._model.data_changed.connect(self.on_data_changed)
+        self._model.debug_mode_changed.connect(self.on_debug_mode_changed)
+        self._model.update_int_changed.connect(self.on_update_int_changed)
         self._model.view_time_int_changed.connect(
             self.on_view_time_int_changed)
         self._model.view_dateTime_start_changed.connect(
@@ -86,11 +84,16 @@ class MainView(QMainWindow):
 
         # pyqtgraph demo
         self.pyqtgraphdemo()
-        
+
     @pyqtSlot(bool)
     def on_com_mode_changed(self, value):
         self._ui.action_enable_com.setChecked(value)
         self._ui.action_disable_com.setChecked(not value)
+
+    @pyqtSlot(pd.DataFrame)
+    def on_data_changed(self, value):
+        self._ui.tableWidget.setData(value.transpose().to_dict())
+        self.update_graph()
 
     @pyqtSlot(bool)
     def on_debug_mode_changed(self, value):
@@ -99,16 +102,15 @@ class MainView(QMainWindow):
 
     @pyqtSlot(int)
     def on_update_int_changed(self, value):
-        self._ui.action_set_update_interval_5_sec.setChecked(
-            value == (5*1000))
-        self._ui.action_set_update_interval_1_min.setChecked(
-            value == (60*1000))
+        self._ui.action_set_update_interval_5_sec.setChecked(value == (5 *
+                                                                       1000))
+        self._ui.action_set_update_interval_1_min.setChecked(value == (60 *
+                                                                       1000))
         self._ui.action_set_update_interval_15_min.setChecked(
-            value == (15*60*1000))
-        self._ui.action_set_update_interval_1_h.setChecked(
-            value == (60*60*1000))
-        self._ui.action_set_update_interval_manuel.setChecked(
-            value == -1)
+            value == (15 * 60 * 1000))
+        self._ui.action_set_update_interval_1_h.setChecked(value == (60 * 60 *
+                                                                     1000))
+        self._ui.action_set_update_interval_manuel.setChecked(value == -1)
 
     @pyqtSlot(str)
     def on_view_time_int_changed(self, value):
@@ -146,7 +148,15 @@ class MainView(QMainWindow):
         self._ui.line_send_command.clear()
 
     def pyqtgraphdemo(self):
-        pw = self._ui.graphicsView
-        p1 = pw.plot()
-        p1.setPen((200,200,100))
-        p1.setData(y=self._model.sin, x=self._model.x)
+        self._ui.graphicsView.plot(y=self._model.sin
+                                   )#x=self._model.x)#, x=self._model.x)
+
+    def update_graph(self):
+        # p1 = self._ui.graphicsView.plot()
+        # p1.setPen((200, 200, 100))
+        self._ui.graphicsView.plot(y=self._model.data["t_bme"].tolist(),
+                                   #x=self._model.data["DateTime"].tolist(),
+                                   clear=True)
+        print("temp:" + str(self._model.data["t_bme"].tolist()))
+        print("dateTime:" + str(self._model.data["DateTime"].tolist()))
+        

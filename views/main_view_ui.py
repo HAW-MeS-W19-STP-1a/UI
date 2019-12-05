@@ -1,4 +1,3 @@
-
 # -*- coding: utf-8 -*-
 
 # Form implementation generated from reading ui file './resources/main_view.ui'
@@ -184,6 +183,13 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(self.tab_graph, "")
         self.tab_overview = QtWidgets.QWidget()
         self.tab_overview.setObjectName("tab_overview")
+        self.gridLayout_3 = QtWidgets.QGridLayout(self.tab_overview)
+        self.gridLayout_3.setObjectName("gridLayout_3")
+        self.tableWidget = TableWidget(self.tab_overview)
+        self.tableWidget.setObjectName("tableWidget")
+        self.tableWidget.setColumnCount(0)
+        self.tableWidget.setRowCount(0)
+        self.gridLayout_3.addWidget(self.tableWidget, 0, 0, 1, 1)
         self.tabWidget.addTab(self.tab_overview, "")
         self.verticalLayout_2.addWidget(self.tabWidget)
         self.verticalWidget_Console = QtWidgets.QWidget(self.splitter_main)
@@ -212,7 +218,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.splitter_main, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 855, 21))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 855, 22))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -345,7 +351,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuMode.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(0)
+        self.tabWidget.setCurrentIndex(1)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -404,5 +410,5 @@ class Ui_MainWindow(object):
         self.action_set_update_interval_manuel.setText(_translate("MainWindow", "Manuel"))
         self.action_enable_com.setText(_translate("MainWindow", "Enable Com"))
         self.action_disable_com.setText(_translate("MainWindow", "Disable Com"))
-from pyqtgraph import PlotWidget
+from pyqtgraph import PlotWidget, TableWidget
 import mvc_app_rc

@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import QMainWindow
 from PyQt5.QtCore import pyqtSlot, QDateTime
 from views.main_view_ui import Ui_MainWindow
+from  mywidgets.dateaxisitem import DateAxisItem
 import numpy as np
 import pandas as pd
 import pyqtgraph as pg
@@ -80,7 +81,7 @@ class MainView(QMainWindow):
         self._main_controller.set_debug_mode(True)
         self._main_controller.set_com_mode(False)
         self._main_controller.set_view_time_int("1h")
-        self._main_controller.set_update_int(60000)
+        self._main_controller.set_update_int(-1)
 
         # pyqtgraph demo
         self.pyqtgraphdemo()
@@ -148,9 +149,50 @@ class MainView(QMainWindow):
         self._ui.line_send_command.clear()
 
     def pyqtgraphdemo(self):
-        self._ui.graphicsView.plot(y=self._model.sin
-                                   )#x=self._model.x)#, x=self._model.x)
+        # axis = da.DateAxis(orientation="bottom")
+        # self._ui.graphicsView.AxisItems={"bottom":axis}
+        self.pw = self._ui.graphicsView
+        self.pw.setTitle("This is just a test")
+        self.axis = DateAxisItem(orientation="bottom")
+        self.axis.attachToPlotItem(self.pw.getPlotItem())
+        self.p1 = self.pw.plotItem
+        self.p1.setLabels(left="axis 1")
+        
+        #create a new Viewbox, link the right axis to its coordinate system
+        self.p2 = pg.ViewBox()
+        self.p1.showAxis("right")
+        self.p1.scene().addItem(self.p2)
+        self.p1.getAxis("right").linkToView(self.p2)
+        self.p2.setXLink(self.p1)
+        self.p1.getAxis("right").setLabel("axis 2", color="#0000ff")
 
+        # create third ViewBox
+        # this time we need to create a new Axis as well
+        self.p3 = pg.ViewBox()
+        self.ax3 = pg.AxisItem("right")
+        self.p1.layout.addItem(self.ax3, 2, 3)
+        self.p1.scene().addItem(self.p3)
+        self.ax3.linkToView(self.p3)
+        self.p3.setXLink(self.p1)
+        self.ax3.setZValue(-10000)
+        self.ax3.setLabel("axis 3", color="#ff0000")
+
+        self.updateViews(self.p1, self.p2, self.p3)
+        self.p1.vb.sigResized.connect(lambda: self.updateViews(self.p1, self.p2, self.p3))
+        
+        self.p1.plot(x=self._model.x, y=self._model.y1)
+        self.p2.addItem(pg.PlotCurveItem(x=self._model.x, y=self._model.y2, pen="b"))
+        self.p3.addItem(pg.PlotCurveItem(x=self._model.x, y=self._model.y3, pen="r"))       
+    # Handle view resizing:
+    def updateViews(self, p1, p2, p3):
+        # view has resized; update auxilliary views to match
+        p2.setGeometry(p1.vb.sceneBoundingRect())
+        p3.setGeometry(p1.vb.sceneBoundingRect())
+
+        # need to re-update linked axes since this was called
+        # incorrectly while views had different shaped
+        p2.linkedViewChanged(p1.vb, p2.XAxis)
+        p3.linkedViewChanged(p1.vb, p3.XAxis)
     def update_graph(self):
         # p1 = self._ui.graphicsView.plot()
         # p1.setPen((200, 200, 100))

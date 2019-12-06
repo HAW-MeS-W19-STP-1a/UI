@@ -143,5 +143,7 @@ class Model(QObject):
             "v_solar", "i_solar", "v_5v"
         ])
         self._ser = None
-        self.x = [1, 2, 3, 4]
-        self.sin = [1, 2, 3, 4]
+        self.x = (np.arange(8)+1) * (3600 * 24 * 356)
+        self.y1 = [1, 6, 2, 4, 3, 5, 6, 8]
+        self.y2 = [10, 20, 30, 40, 50, 60, 70, 80]
+        self.y3 = [0.8, 0.7, 0.6, 0.5, 0.4, 0.3, 0.2, 0.1]

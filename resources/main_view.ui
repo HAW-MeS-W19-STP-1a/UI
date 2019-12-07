@@ -6,9 +6,14 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>855</width>
-    <height>717</height>
+    <width>1366</width>
+    <height>908</height>
    </rect>
+  </property>
+  <property name="font">
+   <font>
+    <pointsize>12</pointsize>
+   </font>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
@@ -335,9 +340,19 @@
          </widget>
         </item>
         <item>
+         <widget class="QLabel" name="graphicsLabel">
+          <property name="text">
+           <string>TextLabel</string>
+          </property>
+          <property name="alignment">
+           <set>Qt::AlignCenter</set>
+          </property>
+         </widget>
+        </item>
+        <item>
          <widget class="QTabWidget" name="tabWidget">
           <property name="currentIndex">
-           <number>1</number>
+           <number>0</number>
           </property>
           <widget class="QWidget" name="tab_graph">
            <attribute name="title">
@@ -403,8 +418,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>855</width>
-     <height>22</height>
+     <width>1366</width>
+     <height>27</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

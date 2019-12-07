@@ -13,7 +13,10 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(855, 717)
+        MainWindow.resize(1366, 908)
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        MainWindow.setFont(font)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.gridLayout = QtWidgets.QGridLayout(self.centralwidget)
@@ -171,6 +174,10 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.addWidget(self.dateTimeEdit_stop)
         self.layout_start_end_label.addWidget(self.verticalWidget_stop)
         self.verticalLayout_2.addWidget(self.horizontalFrame_dateTimeLabel)
+        self.graphicsLabel = QtWidgets.QLabel(self.verticalWidget_Graph)
+        self.graphicsLabel.setAlignment(QtCore.Qt.AlignCenter)
+        self.graphicsLabel.setObjectName("graphicsLabel")
+        self.verticalLayout_2.addWidget(self.graphicsLabel)
         self.tabWidget = QtWidgets.QTabWidget(self.verticalWidget_Graph)
         self.tabWidget.setObjectName("tabWidget")
         self.tab_graph = QtWidgets.QWidget()
@@ -218,7 +225,7 @@ class Ui_MainWindow(object):
         self.gridLayout.addWidget(self.splitter_main, 0, 0, 1, 1)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 855, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 1366, 27))
         self.menubar.setObjectName("menubar")
         self.menuFile = QtWidgets.QMenu(self.menubar)
         self.menuFile.setObjectName("menuFile")
@@ -351,7 +358,7 @@ class Ui_MainWindow(object):
         self.menubar.addAction(self.menuMode.menuAction())
 
         self.retranslateUi(MainWindow)
-        self.tabWidget.setCurrentIndex(1)
+        self.tabWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -370,6 +377,7 @@ class Ui_MainWindow(object):
         self.comboBox_Data2.setItemText(2, _translate("MainWindow", "Wind Direction"))
         self.label_stop.setText(_translate("MainWindow", "End"))
         self.dateTimeEdit_stop.setDisplayFormat(_translate("MainWindow", "dd.MM.yyyy HH:mm:ss"))
+        self.graphicsLabel.setText(_translate("MainWindow", "TextLabel"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_graph), _translate("MainWindow", "Graph"))
         self.tabWidget.setTabText(self.tabWidget.indexOf(self.tab_overview), _translate("MainWindow", "Overview"))
         self.pushButton_clear_window.setText(_translate("MainWindow", "Clear"))

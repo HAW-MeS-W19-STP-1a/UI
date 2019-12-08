@@ -65,6 +65,14 @@ class MainView(QMainWindow):
             lambda: self.on_send_command_returnPressed(
                 self._ui.line_send_command.text()))
 
+        # combo boxes
+        self._ui.comboBox_Data1.currentIndexChanged.connect(
+            lambda: self._main_controller.set_data1_idx(self._ui.comboBox_Data1
+                                                        .currentIndex() + 2))
+        self._ui.comboBox_Data2.currentIndexChanged.connect(
+            lambda: self._main_controller.set_data2_idx(self._ui.comboBox_Data2
+                                                        .currentIndex() + 2))
+
         # listen for model event signals
         self._model.com_mode_changed.connect(self.on_com_mode_changed)
         self._model.data_changed.connect(self.on_data_changed)
@@ -78,12 +86,15 @@ class MainView(QMainWindow):
             self.on_view_dateTime_stop_changed)
         self._model.console_buffer_changed.connect(
             self.on_command_buffer_changed)
+        self._model.data1_idx_changed.connect(
+            lambda: self.on_data_idx_changed())
+        self._model.data2_idx_changed.connect(
+            lambda: self.on_data_idx_changed())
 
         # set a default value
         self._main_controller.set_debug_mode(True)
         self._main_controller.set_com_mode(False)
         self._main_controller.set_simulate_mode(True)
-        self._main_controller.set_view_time_int("1h")
         self._main_controller.set_update_int(-1)
 
     @pyqtSlot(bool)
@@ -122,6 +133,9 @@ class MainView(QMainWindow):
         self._ui.action_set_view_1_d.setChecked(value == "1d")
         self._ui.action_set_view_1_w.setChecked(value == "1w")
         self._ui.action_set_view_1_m.setChecked(value == "1m")
+        self._gw.setXLim(self._model.view_dateTime_start,
+                         self._model.view_dateTime_stop)
+        self.on_data_idx_changed()
 
         if value == "custom":
             self._ui.dateTimeEdit_start.setReadOnly(False)
@@ -148,11 +162,17 @@ class MainView(QMainWindow):
         self._main_controller.send_command(value)
         self._ui.line_send_command.clear()
 
+    @pyqtSlot()
+    def on_data_idx_changed(self):
+        label1 = self._model.labels[self._model.data1_idx]
+        label2 = self._model.labels[self._model.data2_idx]
+        self._gw.setYLabels(label1, label2)
+        self.update_graph()
+
     def update_graph(self):
-        data1 = self._model.data["t_bme"].to_numpy()
-        data2 = self._model.data["pres"].to_numpy()
+        data1 = self._model.data[self._model.data1_idx].to_numpy()
+        data2 = self._model.data[self._model.data2_idx].to_numpy()
         dateTimeArray = self._model.data["DateTimeInSec"].to_numpy()
         self._gw.updateGraphs(data1, data2, dateTimeArray)
         self._gw.setXLim(self._model.view_dateTime_start,
                          self._model.view_dateTime_stop)
-        self._gw.setYLabels("t_bme", "pres")

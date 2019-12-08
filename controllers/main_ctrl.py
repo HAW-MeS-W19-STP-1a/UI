@@ -65,6 +65,20 @@ class MainController(QObject):
         if self._model.update_int != -1:
             self._update_timer.start(self._model.update_int)
 
+    def set_data1_idx(self, value):
+        print("Index is " + str(value))
+        value = self._model.data.columns[value]
+        if self._model.debug_mode:
+            print("Setting data1_idx to " + str(value))
+        self._model.data1_idx = value
+
+    def set_data2_idx(self, value):
+        print("Index is " + str(value))
+        value = self._model.data.columns[value]
+        if self._model.debug_mode:
+            print("Setting data2_idx to " + str(value))
+        self._model.data2_idx = value
+
     def send_command(self, value):
         if self._model.debug_mode:
             print("Sending command: " + str(value))
@@ -114,7 +128,7 @@ class MainController(QObject):
                 "i_bat": items[20],
                 "v_solar": items[21],
                 "i_solar": items[22],
-                "v_5v": items[23]
+                "v_sys": items[23]
             }
             newData = pd.DataFrame([newData])
             self._model.data = self._model.data.append(newData,
@@ -144,7 +158,7 @@ class MainController(QObject):
             "i_bat": random(),
             "v_solar": random(),
             "i_solar": random(),
-            "v_5v": random()
+            "v_sys": random()
         }
         newData = pd.DataFrame([newData])
         self._model.data = self._model.data.append(newData,

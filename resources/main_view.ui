@@ -92,7 +92,7 @@
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>125</width>
+                  <width>200</width>
                   <height>0</height>
                  </size>
                 </property>
@@ -137,7 +137,7 @@
              </property>
              <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
-               <widget class="QLabel" name="label_Data3">
+               <widget class="QLabel" name="label_Data1">
                 <property name="sizePolicy">
                  <sizepolicy hsizetype="Preferred" vsizetype="Minimum">
                   <horstretch>0</horstretch>
@@ -153,20 +153,95 @@
                </widget>
               </item>
               <item>
-               <widget class="QComboBox" name="comboBox_Data2_2">
+               <widget class="QComboBox" name="comboBox_Data1">
                 <item>
                  <property name="text">
-                  <string>Temperature</string>
+                  <string>t_bme</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Wind Speed</string>
+                  <string>t_cpu</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Wind Direction</string>
+                  <string>t_qmc</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>t_mpu</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>w_dir</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>w_spd</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>pres</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>hum</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>zen</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>azm</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>lat</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>lon</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>alt</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>v_bat</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>i_bat</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>v_solar</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>i_solar</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>v_sys</string>
                  </property>
                 </item>
                </widget>
@@ -245,17 +320,92 @@
                <widget class="QComboBox" name="comboBox_Data2">
                 <item>
                  <property name="text">
-                  <string>Wind Speed</string>
+                  <string>t_bme</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Temperature</string>
+                  <string>t_cpu</string>
                  </property>
                 </item>
                 <item>
                  <property name="text">
-                  <string>Wind Direction</string>
+                  <string>t_qmc</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>t_mpu</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>w_dir</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>w_spd</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>pres</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>hum</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>zen</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>azm</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>lat</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>lon</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>alt</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>v_bat</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>i_bat</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>v_solar</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>i_solar</string>
+                 </property>
+                </item>
+                <item>
+                 <property name="text">
+                  <string>v_sys</string>
                  </property>
                 </item>
                </widget>
@@ -317,7 +467,7 @@
                 </property>
                 <property name="minimumSize">
                  <size>
-                  <width>125</width>
+                  <width>200</width>
                   <height>0</height>
                  </size>
                 </property>
@@ -419,7 +569,7 @@
      <x>0</x>
      <y>0</y>
      <width>1366</width>
-     <height>27</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuFile">

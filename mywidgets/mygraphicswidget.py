@@ -59,20 +59,21 @@ class MyGraphicsWidget():
         self._vb2.linkedViewChanged(self._p1.vb, self._vb2.XAxis)
 
     def mouseMoved(self, evt):
-        pos = evt[0]
-        if self._p1.sceneBoundingRect().contains(pos):
-            mousePoint = self._p1.vb.mapSceneToView(pos)
-            dt = int(mousePoint.x())
-            if dt > 0 and dt < self._dateTimeArray.max():
-                dt, index = self.find_nearest(self._dateTimeArray, dt)
-                self._label.setText(
-                    "<span style='font-size: 12pt'>%s :   <span style='color: red'>%s =%0.1f</span>,   <span style='color: green'>%s=%0.1f</span>"
-                    % (QDateTime.fromSecsSinceEpoch(dt).toString(
-                        "dd.MM.yyyy hh:mm:ss"), self._ylabelLeft,
-                       self._data1[index], self._ylabelRight,
-                       self._data2[index]))
-            self._vLine.setPos(dt)
-            self._hLine.setPos(mousePoint.y())
+        if len(self._dateTimeArray) > 2:
+            pos = evt[0]
+            if self._p1.sceneBoundingRect().contains(pos):
+                mousePoint = self._p1.vb.mapSceneToView(pos)
+                dt = int(mousePoint.x())
+                if dt > 0 and dt < self._dateTimeArray.max():
+                    dt, index = self.find_nearest(self._dateTimeArray, dt)
+                    self._label.setText(
+                        "<span style='font-size: 12pt'>%s :   <span style='color: red'>%s = %0.3f</span>  ;  <span style='color: green'>%s = %0.3f</span>"
+                        % (QDateTime.fromSecsSinceEpoch(dt).toString(
+                            "dd.MM.yyyy hh:mm:ss"), self._ylabelLeft,
+                           self._data1[index], self._ylabelRight,
+                           self._data2[index]))
+                self._vLine.setPos(dt)
+                self._hLine.setPos(mousePoint.y())
 
     def find_nearest(self, array, value):
         array = np.asarray(array)

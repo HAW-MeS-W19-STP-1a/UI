@@ -17,6 +17,8 @@ class Model(QObject):
     view_dateTime_start_changed = pyqtSignal(QDateTime)
     view_dateTime_stop_changed = pyqtSignal(QDateTime)
     simulate_mode_changed = pyqtSignal(bool)
+    data1_idx_changed = pyqtSignal(str)
+    data2_idx_changed = pyqtSignal(str)
 
     @property
     def amount(self):
@@ -134,6 +136,28 @@ class Model(QObject):
         self._simulate_mode = value
         self.simulate_mode_changed.emit(value)
 
+    @property
+    def data1_idx(self):
+        return self._data1_idx
+
+    @data1_idx.setter
+    def data1_idx(self, value):
+        self._data1_idx = value
+        self.data1_idx_changed.emit(value)
+
+    @property
+    def data2_idx(self):
+        return self._data2_idx
+
+    @data2_idx.setter
+    def data2_idx(self, value):
+        self._data2_idx = value
+        self.data2_idx_changed.emit(value)
+
+    @property
+    def labels(self):
+        return self._labels
+
     def __init__(self):
         super().__init__()
 
@@ -147,12 +171,31 @@ class Model(QObject):
         self._update_int = 5000
         self._console_buffer = ""
         self._com_mode = False
+        self._data1_idx = "t_bme"
+        self._data2_idx = "t_bme"
         self._data = pd.DataFrame(columns=[
-            "DateTime", "DateTimeInSec",
-            "t_bme", "t_cpu", "t_qmc", "t_mpu", "w_dir", "w_spd", "pres",
-            "hum", "zen", "azm", "lat", "lon", "alt", "v_bat", "i_bat",
-            "v_solar", "i_solar", "v_5v"
+            "DateTime", "DateTimeInSec", "t_bme", "t_cpu", "t_qmc", "t_mpu",
+            "w_dir", "w_spd", "pres", "hum", "zen", "azm", "lat", "lon", "alt",
+            "v_bat", "i_bat", "v_solar", "i_solar", "v_sys"
         ])
+        self._labels = {"t_bme": "BME Temperature in \xB0C",
+                        "t_cpu": "CPU Temperature in \xB0C",
+                        "t_qmc": "QMC Temperature in \xB0C",
+                        "t_mpu": "MPU Temperature in \xB0C",
+                        "w_dir": "Wind Direction in \xB0",
+                        "w_spd": "Wind Speed in m/s",
+                        "pres": "Pressure in Pa",
+                        "hum": "Humidity in %",
+                        "zen": "Zenith in \xB0",
+                        "azm": "Azimuth in \xB0",
+                        "lat": "Latitude in \xB0",
+                        "lon": "Longitude in \xB0",
+                        "alt": "Altitude in m",
+                        "v_bat": "Battery Volatage in V",
+                        "i_bat": "Battery Current in A",
+                        "v_solar": "Solar Volatage in V",
+                        "i_solar": "Solar Current in A",
+                        "v_sys": "System Voltage in V"}
         self._ser = None
         self._simulate_mode = True
         # Test stuff

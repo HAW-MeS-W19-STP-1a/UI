@@ -2,11 +2,18 @@ from PyQt5.QtCore import QDateTime
 from mywidgets.dateaxisitem import DateAxisItem
 import numpy as np
 import pyqtgraph as pg
+from pyqtgraph.Qt import QtGui
 
 
 class MyGraphicsWidget():
     def __init__(self, plotWidget, label, data1, data2, dateTimeArray):
         self._pw = plotWidget
+        self._ylabelLeft = "axis 1"
+        self._ylabelRight = "axis 2"
+        self._ylabelStyleLeft = {'color': '#00ff00', 'font-size': '20px'}
+        self._ylabelStyleRight = {'color': '#ff0000', 'font-size': '20px'}
+        self._font = QtGui.QFont()
+        self._font.setPixelSize(18)
         self._label = label
         self._data1 = data1
         self._data2 = data2
@@ -15,7 +22,6 @@ class MyGraphicsWidget():
         self._axis.attachToPlotItem(self._pw.getPlotItem())
 
         self._p1 = self._pw.plotItem
-        self._p1.setLabels(left="axis 1")
 
         # create a new Viewbox, link the right axis to its coordinate system
         self._vb2 = pg.ViewBox()
@@ -27,7 +33,6 @@ class MyGraphicsWidget():
         self._p1.scene().addItem(self._vb2)
         self._p1.getAxis("right").linkToView(self._vb2)
         self._vb2.setXLink(self._p1)
-        self._p1.getAxis("right").setLabel("axis 2", color="#ff0000")
 
         self.updateViews()
         self._p1.vb.sigResized.connect(self.updateViews)
@@ -38,7 +43,10 @@ class MyGraphicsWidget():
         self._proxy = pg.SignalProxy(self._p1.scene().sigMouseMoved,
                                      rateLimit=60,
                                      slot=self.mouseMoved)
-
+        self.setYLabels("axis 1", "axis 2")
+        self._p1.getAxis("left").tickFont = self._font
+        self._p1.getAxis("right").tickFont = self._font
+        self._p1.getAxis("bottom").tickFont = self._font
         self._p1.plot(x=self._dateTimeArray, y=self._data1, pen="g")
 
     # Handle view resizing:
@@ -58,9 +66,10 @@ class MyGraphicsWidget():
             if dt > 0 and dt < self._dateTimeArray.max():
                 dt, index = self.find_nearest(self._dateTimeArray, dt)
                 self._label.setText(
-                    "<span style='font-size: 12pt'>x=%s,   <span style='color: red'>y1=%0.1f</span>,   <span style='color: green'>y2=%0.1f</span>"
+                    "<span style='font-size: 12pt'>%s :   <span style='color: red'>%s =%0.1f</span>,   <span style='color: green'>%s=%0.1f</span>"
                     % (QDateTime.fromSecsSinceEpoch(dt).toString(
-                        "dd.MM.yyyy hh:mm:ss"), self._data1[index],
+                        "dd.MM.yyyy hh:mm:ss"), self._ylabelLeft,
+                       self._data1[index], self._ylabelRight,
                        self._data2[index]))
             self._vLine.setPos(dt)
             self._hLine.setPos(mousePoint.y())
@@ -85,3 +94,14 @@ class MyGraphicsWidget():
                                     y=self._data2,
                                     pen="r")
         self._vb2.addItem(self._p2)
+
+    def setXLim(self, dt_min, dt_max):
+        self._p1.vb.setRange(xRange=(dt_min.toSecsSinceEpoch(),
+                                     dt_max.toSecsSinceEpoch()))
+
+    def setYLabels(self, ylabelLeft, ylabelRight):
+        self._ylabelLeft = ylabelLeft
+        self._ylabelRight = ylabelRight
+
+        self._p1.setLabel("left", ylabelLeft, **self._ylabelStyleLeft)
+        self._p1.setLabel("right", ylabelRight, **self._ylabelStyleRight)

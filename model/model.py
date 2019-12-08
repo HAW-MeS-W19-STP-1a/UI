@@ -16,6 +16,7 @@ class Model(QObject):
     view_time_int_changed = pyqtSignal(str)
     view_dateTime_start_changed = pyqtSignal(QDateTime)
     view_dateTime_stop_changed = pyqtSignal(QDateTime)
+    simulate_mode_changed = pyqtSignal(bool)
 
     @property
     def amount(self):
@@ -124,6 +125,15 @@ class Model(QObject):
         self._data = value
         self.data_changed.emit(value)
 
+    @property
+    def simulate_mode(self):
+        return self._simulate_mode
+
+    @simulate_mode.setter
+    def simulate_mode(self, value):
+        self._simulate_mode = value
+        self.simulate_mode_changed.emit(value)
+
     def __init__(self):
         super().__init__()
 
@@ -138,11 +148,14 @@ class Model(QObject):
         self._console_buffer = ""
         self._com_mode = False
         self._data = pd.DataFrame(columns=[
-            "DateTime", "t_bme", "t_cpu", "t_qmc", "t_mpu", "w_dir", "w_spd",
-            "pres", "hum", "zen", "azm", "lat", "lon", "alt", "v_bat", "i_bat",
+            "DateTime", "DateTimeInSec",
+            "t_bme", "t_cpu", "t_qmc", "t_mpu", "w_dir", "w_spd", "pres",
+            "hum", "zen", "azm", "lat", "lon", "alt", "v_bat", "i_bat",
             "v_solar", "i_solar", "v_5v"
         ])
         self._ser = None
-        self.x = (np.arange(8)+1) * (3600 * 24 * 356)
+        self._simulate_mode = True
+        # Test stuff
+        self.x = (np.arange(8) + 1) * (3600 * 24 * 356)
         self.y1 = np.array([1, 6, 2, 4, 3, 5, 6, 8])
         self.y2 = np.array([10, 20, 30, 40, 50, 60, 70, 80])

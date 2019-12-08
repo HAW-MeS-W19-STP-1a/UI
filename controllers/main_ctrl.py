@@ -1,6 +1,8 @@
 from PyQt5.QtCore import QObject, pyqtSlot, QDateTime, QTimer
+from random import random
 import serial
 import pandas as pd
+
 
 class MainController(QObject):
     def __init__(self, model):
@@ -19,8 +21,7 @@ class MainController(QObject):
     def add_to_console_buffer(self, value):
         if self._model.debug_mode:
             print("Adding to console_buffer: " + str(value))
-        self._model.console_buffer = self._model.console_buffer + str(
-            value)
+        self._model.console_buffer = self._model.console_buffer + str(value)
 
     def set_com_mode(self, value):
         if value:
@@ -45,6 +46,11 @@ class MainController(QObject):
         self._model.debug_mode = value
         self.update_view_dateTime()
 
+    def set_simulate_mode(self, value):
+        if self._model.debug_mode:
+            print("Setting Simulate Mode to" + str(value))
+        self._model.simulate_mode = value
+
     def set_view_time_int(self, value):
         if self._model.debug_mode:
             print("Changing view time interval to " + str(value))
@@ -65,7 +71,7 @@ class MainController(QObject):
         self.add_to_console_buffer("-> " + str(value) + "\r\n")
         if self._model.com_mode:
             # TODO Implement sending of commands
-            self.send_command_to_station(value+"\r\n")
+            self.send_command_to_station(value + "\r\n")
 
     def send_command_to_station(self, command):
         if self._model.debug_mode:
@@ -86,32 +92,63 @@ class MainController(QObject):
             line = line.replace("\r\n", "")
             items = line.split(",")
             dateTime = QDateTime.fromString(
-                "20"+items[0]+items[1]+items[2]+items[3]+items[4]+items[5],
-                "yyyyMMddhhmmss")
-            newData = {"DateTime": dateTime,
-                       "t_bme": int(items[6]),
-                       "t_cpu": items[7],
-                       "t_qmc": items[8],
-                       "t_mpu": items[9],
-                       "w_dir": items[10],
-                       "w_spd": items[11],
-                       "pres": items[12],
-                       "hum": items[13],
-                       "zen": items[14],
-                       "azm": items[15],
-                       "lat": items[16],
-                       "lon": items[17],
-                       "alt": items[18],
-                       "v_bat": items[19],
-                       "i_bat": items[20],
-                       "v_solar": items[21],
-                       "i_solar": items[22],
-                       "v_5v": items[23]}
+                "20" + items[0] + items[1] + items[2] + items[3] + items[4] +
+                items[5], "yyyyMMddhhmmss")
+            newData = {
+                "DateTime": dateTime.toString("dd.MM.yyyy hh:mm:ss"),
+                "DateTimeInSec": dateTime.toSecsSinceEpoch(),
+                "t_bme": int(items[6]),
+                "t_cpu": items[7],
+                "t_qmc": items[8],
+                "t_mpu": items[9],
+                "w_dir": items[10],
+                "w_spd": items[11],
+                "pres": items[12],
+                "hum": items[13],
+                "zen": items[14],
+                "azm": items[15],
+                "lat": items[16],
+                "lon": items[17],
+                "alt": items[18],
+                "v_bat": items[19],
+                "i_bat": items[20],
+                "v_solar": items[21],
+                "i_solar": items[22],
+                "v_5v": items[23]
+            }
             newData = pd.DataFrame([newData])
             self._model.data = self._model.data.append(newData,
                                                        ignore_index=True)
-            if self._model.debug_mode:
-                print("Data: " + str(self._model.data))
+
+    def simulate_new_data(self):
+        if self._model.debug_mode:
+            print("Simulating new Data.")
+        dateTime = QDateTime.currentDateTimeUtc()
+        newData = {
+            "DateTime": dateTime.toString("dd.MM.yyyy hh:mm:ss"),
+            "DateTimeInSec": dateTime.toSecsSinceEpoch(),
+            "t_bme": random(),
+            "t_cpu": random(),
+            "t_qmc": random(),
+            "t_mpu": random(),
+            "w_dir": random(),
+            "w_spd": random(),
+            "pres": random(),
+            "hum": random(),
+            "zen": random(),
+            "azm": random(),
+            "lat": random(),
+            "lon": random(),
+            "alt": random(),
+            "v_bat": random(),
+            "i_bat": random(),
+            "v_solar": random(),
+            "i_solar": random(),
+            "v_5v": random()
+        }
+        newData = pd.DataFrame([newData])
+        self._model.data = self._model.data.append(newData,
+                                                   ignore_index=True)
 
     def update_view_dateTime(self):
         if self._model.debug_mode:
@@ -142,9 +179,13 @@ class MainController(QObject):
                     self._model.view_dateTime_stop.addMonths(-1)
 
     def on_update_timer_expired(self):
-        self.set_com_mode(True)
-        self.send_command("AT+CGUI?")
-        self.set_com_mode(False)
+        if self._model.simulate_mode:
+            self.simulate_new_data()
+        else:
+            self.set_com_mode(True)
+            self.send_command("AT+CGUI?")
+            self.set_com_mode(False)
+
         self.update_view_dateTime()
         if self._model.update_int != -1:
             self._update_timer.start(self._model.update_int)

@@ -82,6 +82,7 @@ class MainView(QMainWindow):
         # set a default value
         self._main_controller.set_debug_mode(True)
         self._main_controller.set_com_mode(False)
+        self._main_controller.set_simulate_mode(True)
         self._main_controller.set_view_time_int("1h")
         self._main_controller.set_update_int(-1)
 
@@ -147,78 +148,11 @@ class MainView(QMainWindow):
         self._main_controller.send_command(value)
         self._ui.line_send_command.clear()
 
-    # def pyqtgraphdemo(self):
-    #     # axis = da.DateAxis(orientation="bottom")
-    #     # self._ui.graphicsView.AxisItems={"bottom":axis}
-    #     self.pw = self._ui.graphicsView
-    #     self.pw.setTitle("This is just a test")
-    #     self.axis = DateAxisItem(orientation="bottom")
-    #     self.axis.attachToPlotItem(self.pw.getPlotItem())
-    #     self.p1 = self.pw.plotItem
-    #     self.p1.setLabels(left="axis 1")
-
-    #     # create a new Viewbox, link the right axis to its coordinate system
-    #     self.p2 = pg.ViewBox()
-    #     self.p1.showAxis("right")
-    #     self.p1.scene().addItem(self.p2)
-    #     self.p1.getAxis("right").linkToView(self.p2)
-    #     self.p2.setXLink(self.p1)
-    #     self.p1.getAxis("right").setLabel("axis 2", color="#ff0000")
-
-    #     self.updateViews(self.p1, self.p2)
-    #     self.p1.vb.sigResized.connect(
-    #         lambda: self.updateViews(self.p1, self.p2))
-
-    #     self.p1.plot(x=self._model.x, y=self._model.y1)
-    #     self.p2.addItem(
-    #         pg.PlotCurveItem(x=self._model.x, y=self._model.y2, pen="r"))
-
-    #     self.vLine = pg.InfiniteLine(angle=90, movable=False)
-    #     self.hLine = pg.InfiniteLine(angle=0, movable=False)
-    #     self.p1.addItem(self.vLine, ignoreBounds=True)
-    #     self.p1.addItem(self.hLine, ignoreBounds=True)
-    #     self.label = self._ui.graphicsLabel
-    #     self.proxy = pg.SignalProxy(
-    #         self.p1.scene().sigMouseMoved,
-    #         rateLimit=60,
-    #         slot=lambda evt: self.mouseMoved(evt, self.p1, self.label, self.
-    #                                          vLine, self.hLine, self._model.y1,
-    #                                          self._model.y2, self._model.x))
-
-    # def mouseMoved(self, evt, plot, label, vLine, hLine, data1, data2,
-    #                dateTime):
-    #     pos = evt[0]
-    #     if plot.sceneBoundingRect().contains(pos):
-    #         mousePoint = plot.vb.mapSceneToView(pos)
-    #         dt = int(mousePoint.x())
-    #         if dt > 0 and dt < dateTime.max():
-    #             dt, index = self.find_nearest(dateTime, dt)
-    #             label.setText(
-    #                 "<span style='font-size: 12pt'>x=%s,   <span style='color: red'>y1=%0.1f</span>,   <span style='color: green'>y2=%0.1f</span>"
-    #                 % (QDateTime.fromSecsSinceEpoch(dt).toString("dd.MM.yyyy hh:mm:ss"), data1[index], data2[index]))
-    #         vLine.setPos(dt)
-    #         hLine.setPos(mousePoint.y())
-
-    # def find_nearest(self, array, value):
-    #     array = np.asarray(array)
-    #     idx = (np.abs(array - value)).argmin()
-    #     return array[idx], idx
-
-    # # Handle view resizing:
-    # def updateViews(self, p1, p2):
-    #     # view has resized; update auxilliary views to match
-    #     p2.setGeometry(p1.vb.sceneBoundingRect())
-
-    #     # need to re-update linked axes since this was called
-    #     # incorrectly while views had different shaped
-    #     p2.linkedViewChanged(p1.vb, p2.XAxis)
-
     def update_graph(self):
-        # p1 = self._ui.graphicsView.plot()
-        # p1.setPen((200, 200, 100))
-        self._ui.graphicsView.plot(
-            y=self._model.data["t_bme"].tolist(),
-            # x=self._model.data["DateTime"].tolist(),
-            clear=True)
-        print("temp:" + str(self._model.data["t_bme"].tolist()))
-        print("dateTime:" + str(self._model.data["DateTime"].tolist()))
+        data1 = self._model.data["t_bme"].to_numpy()
+        data2 = self._model.data["pres"].to_numpy()
+        dateTimeArray = self._model.data["DateTimeInSec"].to_numpy()
+        self._gw.updateGraphs(data1, data2, dateTimeArray)
+        self._gw.setXLim(self._model.view_dateTime_start,
+                         self._model.view_dateTime_stop)
+        self._gw.setYLabels("t_bme", "pres")

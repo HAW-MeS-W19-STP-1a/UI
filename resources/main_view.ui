@@ -624,7 +624,7 @@
     </widget>
     <addaction name="menuSet_Time"/>
     <addaction name="menuSet_Position"/>
-    <addaction name="action_sdjust_orientation"/>
+    <addaction name="action_adjust_orientation"/>
     <addaction name="menuSet_Update_Intervall"/>
     <addaction name="menuSet_Messearing_Intervall"/>
    </widget>
@@ -685,7 +685,7 @@
     <string>Custom</string>
    </property>
   </action>
-  <action name="action_sdjust_orientation">
+  <action name="action_adjust_orientation">
    <property name="text">
     <string>Adjust Orientation</string>
    </property>

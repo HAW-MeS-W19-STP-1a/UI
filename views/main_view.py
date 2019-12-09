@@ -25,6 +25,13 @@ class MainView(QMainWindow):
         self._ui.pushButton_update.clicked.connect(
             self._main_controller.on_update_timer_expired)
         # menu actions
+        self._ui.action_set_localtion_hamburg.triggered.connect(
+            lambda: self._main_controller.set_station_location())
+        self._ui.action_set_time_utc.triggered.connect(
+            lambda: self._main_controller.set_station_time())
+        self._ui.action_adjust_orientation.triggered.connect(
+            lambda: self._main_controller.exec_station_wkup())
+
         self._ui.action_enable_debug.triggered.connect(
             lambda: self._main_controller.set_debug_mode(True))
         self._ui.action_disable_debug.triggered.connect(
@@ -44,6 +51,15 @@ class MainView(QMainWindow):
             lambda: self._main_controller.set_update_int((60 * 60 * 1000)))
         self._ui.action_set_update_interval_manuel.triggered.connect(
             lambda: self._main_controller.set_update_int(-1))
+
+        self._ui.action_set_meas_interval_1_sec.triggered.connect(
+            lambda: self._main_controller.set_station_meas_int(1))
+        self._ui.action_set_meas_interval_5_sec.triggered.connect(
+            lambda: self._main_controller.set_station_meas_int(5))
+        self._ui.action_set_meas_interval_15_sec.triggered.connect(
+            lambda: self._main_controller.set_station_meas_int(15))
+        self._ui.action_set_meas_interval_1_min.triggered.connect(
+            lambda: self._main_controller.set_station_meas_int(60))
 
         self._ui.action_set_view_custom.triggered.connect(
             lambda: self._main_controller.set_view_time_int("custom"))

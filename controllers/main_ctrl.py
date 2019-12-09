@@ -164,6 +164,21 @@ class MainController(QObject):
         self._model.data = self._model.data.append(newData,
                                                    ignore_index=True)
 
+    def set_station_location(self, lat=53.556354, lon=10.022650):
+        lat = int(lat*10000)
+        lon = int(lon*10000)
+        self.send_command("AT+CGNSPOS=%d,%d" % (lat, lon))
+
+    def set_station_time(self, time=QDateTime.currentDateTimeUtc()):
+        time = time.toString("yy,MM,dd,hh,mm,ss")
+        self.send_command("AT+CTIME=" + time)
+
+    def set_station_meas_int(self, meas_int):
+        self.send_command("AT+CINTV=%d" % meas_int)
+
+    def exec_station_wkup(self):
+        self.send_command("AT+CWKUP")
+
     def update_view_dateTime(self):
         if self._model.debug_mode:
             print("Updating view DateTime")

@@ -197,7 +197,7 @@ class Model(QObject):
                         "i_solar": "Solar Current in A",
                         "v_sys": "System Voltage in V"}
         self._ser = None
-        self._simulate_mode = True
+        self._simulate_mode = False
         # Test stuff
         self.x = (np.arange(8) + 1) * (3600 * 24 * 356)
         self.y1 = np.array([1, 6, 2, 4, 3, 5, 6, 8])

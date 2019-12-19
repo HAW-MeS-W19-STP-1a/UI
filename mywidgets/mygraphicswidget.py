@@ -67,7 +67,7 @@ class MyGraphicsWidget():
                 if dt > 0 and dt < self._dateTimeArray.max():
                     dt, index = self.find_nearest(self._dateTimeArray, dt)
                     self._label.setText(
-                        "<span style='font-size: 12pt'>%s :   <span style='color: red'>%s = %0.3f</span>  ;  <span style='color: green'>%s = %0.3f</span>"
+                        "<span style='font-size: 12pt'>%s :   <span style='color: green'>%s = %0.3f</span>  ;  <span style='color: red'>%s = %0.3f</span>"
                         % (QDateTime.fromSecsSinceEpoch(dt).toString(
                             "dd.MM.yyyy hh:mm:ss"), self._ylabelLeft,
                            self._data1[index], self._ylabelRight,
@@ -97,8 +97,8 @@ class MyGraphicsWidget():
         self._vb2.addItem(self._p2)
 
     def setXLim(self, dt_min, dt_max):
-        self._p1.vb.setRange(xRange=(dt_min.toSecsSinceEpoch(),
-                                     dt_max.toSecsSinceEpoch()))
+        self._p1.vb.setRange(xRange=(dt_min.toSecsSinceEpoch()-60*60,
+                                     dt_max.toSecsSinceEpoch()-60*60))
 
     def setYLabels(self, ylabelLeft, ylabelRight):
         self._ylabelLeft = ylabelLeft

@@ -2,6 +2,7 @@ from PyQt5.QtCore import QObject, pyqtSlot, QDateTime, QTimer
 from random import random
 import serial
 import pandas as pd
+import time
 
 
 class MainController(QObject):
@@ -21,15 +22,17 @@ class MainController(QObject):
     def add_to_console_buffer(self, value):
         if self._model.debug_mode:
             print("Adding to console_buffer: " + str(value))
-        self._model.console_buffer = self._model.console_buffer + str(value)
+        self._model.console_buffer = str(value) + self._model.console_buffer
 
     def set_com_mode(self, value):
         if value:
             try:
                 self._model.ser = serial.Serial("COM4")
+                time.sleep(0.1)
                 if self._model.debug_mode:
                     print("Setting com_mode to: " + str(value))
-                self._model.com_mode = value
+                    self.add_to_console_buffer(QDateTime.currentDateTime().toString("[hh:mm:ss]") + " [DEBUG] " + "Connection opened.\r\n")
+                    self._model.com_mode = value
             except Exception as e:
                 if self._model.debug_mode:
                     print(e)
@@ -40,7 +43,7 @@ class MainController(QObject):
             self._model.com_mode = value
             if self._model.debug_mode:
                 print("Setting com_mode to: " + str(value))
-
+                self.add_to_console_buffer(QDateTime.currentDateTime().toString("[hh:mm:ss]") + " [DEBUG] " + "Connection closed.\r\n")
     def set_debug_mode(self, value):
         print("Setting Debug Mode to " + str(value))
         self._model.debug_mode = value
@@ -82,7 +85,7 @@ class MainController(QObject):
     def send_command(self, value):
         if self._model.debug_mode:
             print("Sending command: " + str(value))
-        self.add_to_console_buffer("-> " + str(value) + "\r\n")
+        self.add_to_console_buffer(QDateTime.currentDateTime().toString("[hh:mm:ss]") + " -> " + str(value) + "\r\n")
         if self._model.com_mode:
             # TODO Implement sending of commands
             self.send_command_to_station(value + "\r\n")
@@ -93,11 +96,11 @@ class MainController(QObject):
         if self._model.ser:
             self._model.ser.write(command.encode("UTF-8"))
             line = ""
-            while line != "OK\r\n" and line != "ERROR\r\n":
+            while "OK" not in line and "ERROR" not in line:
                 line = self._model.ser.readline().decode("UTF-8")
                 if self._model.debug_mode:
                     print("Received line from station: " + line)
-                self.add_to_console_buffer("<- " + line)
+                self.add_to_console_buffer(QDateTime.currentDateTime().toString("[hh:mm:ss]") + " <- " + line)
                 self.evaluate_rec_command(line)
 
     def evaluate_rec_command(self, line):
@@ -112,7 +115,7 @@ class MainController(QObject):
                 "DateTime": dateTime.toString("dd.MM.yyyy hh:mm:ss"),
                 "DateTimeInSec": dateTime.toSecsSinceEpoch(),
                 "t_bme": int(items[6])/100,
-                "t_cpu": int(items[7]),
+                "t_cpu": int(items[7])/100,
                 "t_qmc": int(items[8])/100,
                 "t_mpu": int(items[9])/100,
                 "w_dir": int(items[10])/10,
@@ -130,9 +133,12 @@ class MainController(QObject):
                 "i_solar": int(items[22])/100,
                 "v_sys": int(items[23])/100
             }
-            newData = pd.DataFrame([newData])
-            self._model.data = self._model.data.append(newData,
-                                                       ignore_index=True)
+            if (newData["DateTimeInSec"] not in self._model.data["DateTimeInSec"].values) and (newData["DateTimeInSec"] > 60*60*24):
+                print("new: " + str(newData["DateTimeInSec"]))
+                print("old: " + str(self._model.data["DateTimeInSec"]))
+                newData = pd.DataFrame([newData])
+                self._model.data = self._model.data.append(newData,
+                                                           ignore_index=True)
 
     def simulate_new_data(self):
         if self._model.debug_mode:
@@ -167,7 +173,7 @@ class MainController(QObject):
     def set_station_location(self, lat=53.556354, lon=10.022650):
         lat = int(lat*10000)
         lon = int(lon*10000)
-        self.send_command("AT+CGNSPOS=%d,%d" % (lat, lon))
+        self.send_command("AT+CGNSPOS=%d,%d,%d" % (lat, lon, 0))
 
     def set_station_time(self, time=QDateTime.currentDateTimeUtc()):
         time = time.toString("yy,MM,dd,hh,mm,ss")

@@ -134,8 +134,6 @@ class MainController(QObject):
                 "v_sys": int(items[23])/100
             }
             if (newData["DateTimeInSec"] not in self._model.data["DateTimeInSec"].values) and (newData["DateTimeInSec"] > 60*60*24):
-                print("new: " + str(newData["DateTimeInSec"]))
-                print("old: " + str(self._model.data["DateTimeInSec"]))
                 newData = pd.DataFrame([newData])
                 self._model.data = self._model.data.append(newData,
                                                            ignore_index=True)

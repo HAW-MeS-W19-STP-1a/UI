@@ -133,7 +133,7 @@ class MainController(QObject):
                 "i_solar": int(items[22])/100,
                 "v_sys": int(items[23])/100
             }
-            if (newData["DateTimeInSec"] not in self._model.data["DateTimeInSec"].values) and (newData["DateTimeInSec"] > 60*60*24):
+            if (newData["DateTimeInSec"] not in self._model.data["DateTimeInSec"].values) and (int(items[0])>0):
                 newData = pd.DataFrame([newData])
                 self._model.data = self._model.data.append(newData,
                                                            ignore_index=True)
@@ -173,7 +173,8 @@ class MainController(QObject):
         lon = int(lon*10000)
         self.send_command("AT+CGNSPOS=%d,%d,%d" % (lat, lon, 0))
 
-    def set_station_time(self, time=QDateTime.currentDateTimeUtc()):
+    def set_station_time(self, time=0):
+        time = QDateTime.currentDateTimeUtc()
         time = time.toString("yy,MM,dd,hh,mm,ss")
         self.send_command("AT+CTIME=" + time)
 

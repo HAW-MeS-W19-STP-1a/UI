@@ -141,7 +141,7 @@ class MainController(QObject):
     def simulate_new_data(self):
         if self._model.debug_mode:
             print("Simulating new Data.")
-        dateTime = QDateTime.currentDateTimeUtc()
+        dateTime = QDateTime.currentDateTimeUtc().addSecs(-3600)
         newData = {
             "DateTime": dateTime.toString("dd.MM.yyyy hh:mm:ss"),
             "DateTimeInSec": dateTime.toSecsSinceEpoch(),

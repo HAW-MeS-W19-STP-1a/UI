@@ -110,7 +110,7 @@ class MainView(QMainWindow):
         # set a default value
         self._main_controller.set_debug_mode(True)
         self._main_controller.set_com_mode(False)
-        self._main_controller.set_simulate_mode(True)
+        self._main_controller.set_simulate_mode(False)
         self._main_controller.set_update_int(-1)
 
     @pyqtSlot(bool)
